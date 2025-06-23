@@ -82,13 +82,20 @@ public class Board {
 		return res;
 	}
 	
-	public boolean hasShipOnPosition(Cell c) {
-		for (Ship ship : fleet) {
-			if (ship != null && ship.isOnPosition(c)) {
-				return true;
-			}
+	private boolean hasShipOnPosition(Cell c) {
+		return getShipOnPosition(c).isPresent();
+	}
+	
+	private Optional<Ship> getShipOnPosition(Cell c) {
+		return fleet.stream().filter(ship -> ship.isOnPosition(c)).findFirst();
+	}
+	
+	private Optional<ShipPart> getShipPartOnPosition(Cell c) {
+		Optional<Ship> optShip = getShipOnPosition(c);
+		if (optShip.isEmpty()) {
+			return Optional.empty();
 		}
-		return false;
+		return optShip.get().getPartOnPosition(c);		
 	}
 	// endregion
 	
@@ -100,13 +107,14 @@ public class Board {
 		for (int y=0;y<Board.DIMENSION;y++) {
 			res.append(LINES.get(y) + " ");
 			for (int x=0;x<Board.DIMENSION;x++) {
+				res.append("|");
 				Cell cell = grid[y][x];
-				if (hasShipOnPosition(cell)) {
-					res.append("| o ");
+				Optional<ShipPart> optShipPart = getShipPartOnPosition(cell);
+				if (optShipPart.isPresent()) {
+					res.append(optShipPart.get().toString());
 				} else {
-					res.append("|" + cell.toString());
-				}
-				
+					res.append(cell.toString());
+				}				
 			}
 			res.append("|\n");
 		}

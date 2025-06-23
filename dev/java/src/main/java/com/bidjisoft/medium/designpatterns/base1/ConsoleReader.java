@@ -20,18 +20,32 @@
  */
 package com.bidjisoft.medium.designpatterns.base1;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class ConsoleReader {
 	private static Scanner scanner = new Scanner(System.in);
 
 	public static String[] readPosition(int length) {
+		BiFunction<String[], String, String[]> copy = (array, newValue) -> {
+			Stream<String> s = Arrays.stream(array).filter(Objects::nonNull).flatMap(e -> Stream.of(e,newValue));
+			return s.toArray(String[]::new);
+		};
+		
 		int i = 0;
 		String[] res = new String[length];
 		while (i < length) {
-			System.out.print("Enter position (" + (i+1) + "/" + length + "): ");
+			System.out.print(String.format("Enter position (%s/%s): ", (i+1), length));
 			String pos = scanner.next();
 			if (!Cell.isValid(pos)) {					
+				continue;
+			} else if (i > 0 && !Cell.areJuxtaposed(res[i-1], pos)) {					
+				continue;
+			} else if (i > 0 && !Cell.areAligned(copy.apply(res, pos))) { 				
 				continue;
 			}
 			res[i] = pos;			
@@ -39,17 +53,4 @@ public class ConsoleReader {
 		}
 		return res;
 	}	
-	
-	public static String readDirection(String lastDirection) {
-		String res = null;
-		while (res == null) {
-			System.out.print("Enter direction" + (lastDirection != null ? " (" + lastDirection + "): " : ":" ));
-			String pos = scanner.next();
-			if ((pos == null || pos.isBlank()) && (lastDirection != null && !lastDirection.isBlank())) {
-				return lastDirection;
-			} 
-			res = pos;			
-		}
-		return res;
-	}
 }

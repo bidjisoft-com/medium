@@ -23,8 +23,20 @@ package com.bidjisoft.medium.designpatterns.base1;
 public class ShipPart extends Cell {
 
 	// region constructors
-	public ShipPart(Cell c) {
+	private Ship ship;
+	//endregion
+	
+	// region constructors
+	public ShipPart(Cell c, Ship ship) {
 		super(c.getX(), c.getY());
+		this.ship = ship;
+	}
+	// endregion
+	
+	// region overriden
+	@Override
+	public String toString() {
+		return String.format(" %s ", ship.getId()); 
 	}
 	// endregion
 }

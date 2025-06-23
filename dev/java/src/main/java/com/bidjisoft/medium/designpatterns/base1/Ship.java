@@ -20,11 +20,15 @@
  */
 package com.bidjisoft.medium.designpatterns.base1;
 
+import java.util.Optional;
+
 public interface Ship extends Comparable<Ship> {
+	int getId();
 	String getName();
 	String getType();
 	int getLength();
-	
-	boolean isOnPosition(Cell c); 
+		
 	void setPosition(Cell[] positions);
+	boolean isOnPosition(Cell c); 
+	Optional<ShipPart> getPartOnPosition(Cell c);
 }

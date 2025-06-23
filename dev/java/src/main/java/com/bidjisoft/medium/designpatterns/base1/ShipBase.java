@@ -21,6 +21,7 @@
 package com.bidjisoft.medium.designpatterns.base1;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 //	CARRIER, 6
@@ -30,7 +31,13 @@ import java.util.Set;
 //	SUBMARINE, 2
 public abstract class ShipBase implements Ship {
 
+	// region static
+	public static int IDS = 0;
+	// endregion
+	
+	
 	// region variables
+	private int id;	
 	private String name;
 	private Integer length;
 	private Set<ShipPart> parts = new HashSet<ShipPart>();
@@ -38,10 +45,17 @@ public abstract class ShipBase implements Ship {
 	
 	// region constructors
 	protected ShipBase(int length, String name) {
+		IDS++;
+		this.id = IDS;
 		this.name = name;
 		this.length = length;
 	}
 	// endregion
+	
+	@Override
+	public int getId() {
+		return this.id;
+	}
 	
 	@Override
 	public String getName() {
@@ -61,12 +75,16 @@ public abstract class ShipBase implements Ship {
 	
 	public void setPosition(Cell[] positions) { // A1, ...
 		for (Cell cell : positions) {
-			parts.add(new ShipPart(cell));
+			parts.add(new ShipPart(cell, this));
 		}
 	}
 	
 	public boolean isOnPosition(Cell c) {
 		return parts.contains(c); 
+	}
+	
+	public Optional<ShipPart> getPartOnPosition(Cell c) {
+		return parts.stream().filter(p -> p.equals(c)).findFirst();
 	}
 	// endregion
 	
@@ -83,7 +101,7 @@ public abstract class ShipBase implements Ship {
 	
 	@Override
 	public String toString() {
-		return this.name + " " + this.length;
+		return String.format("%s#%s", name, id);
 	}
 	// endregion
 }
