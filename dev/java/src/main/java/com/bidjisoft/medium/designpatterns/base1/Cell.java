@@ -20,8 +20,7 @@
  */
 package com.bidjisoft.medium.designpatterns.base1;
 
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Cell {
@@ -75,7 +74,7 @@ public abstract class Cell {
 		return true;
 	}
 	
-	private static Optional<int[]> getCoordinates(String position) {
+	static Optional<int[]> getCoordinates(String position) {
 		int[] res = new int[2];
 		if (position.length() < 2) {
 			System.err.println("bad position: " + position);
@@ -140,11 +139,7 @@ public abstract class Cell {
 	
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-        int result = 1;
-        result = prime * result + ((x == null) ? 0 : x.hashCode());
-        result = prime * result + ((y == null) ? 0 : y.hashCode());
-        return result;
+		return Objects.hash(x, y);
 	}
 	// endregion
 }

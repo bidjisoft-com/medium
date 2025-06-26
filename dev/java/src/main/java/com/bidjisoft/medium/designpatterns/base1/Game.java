@@ -20,9 +20,8 @@
  */
 package com.bidjisoft.medium.designpatterns.base1;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Game {
@@ -45,20 +44,23 @@ public class Game {
 
 	// region private methods
 	private boolean init() {
-		ConsoleWriter.clearAndPrintln(this.board.toString());			
+		ConsoleWriter.clearAndPrintln(this.board.render());			
 		
-		board.fleet.add(new Submarine("Le Triomphant"));
-		board.fleet.add(new Destroyer("Le Fantasque"));
-		
+		board.addShip(new Submarine("Le Triomphant"));
+		board.addShip(new Destroyer("Le Fantasque"));		
 		Consumer<Ship> initHandler = ship -> {
 			ConsoleWriter.println("===== " + ship.getType() + " '" + ship.getName() + "' =====");
 			String[] position = ConsoleReader.readPosition(ship.getLength());
-			Cell[] cells = this.board.getCells(position);
-			ship.setPosition(cells);
-			ConsoleWriter.clearAndPrintln(this.board.toString());
+			Optional<Cell[]> optCells = this.board.getCells(position);
+			if (optCells.isEmpty()) {
+				return;
+			}
+			ship.setPosition(optCells.get());
+			ConsoleWriter.clearAndPrintln(this.board.render());
 		};
 
-		board.fleet.stream()
+		List<Ship> csvShips = board.getShips();
+		csvShips.stream()
 		    .sorted()
 		    .forEach(initHandler);
 		return true;

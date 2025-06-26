@@ -44,11 +44,15 @@ public abstract class ShipBase implements Ship {
 	// endregion
 	
 	// region constructors
-	protected ShipBase(int length, String name) {
+	protected ShipBase(int length) {
 		IDS++;
 		this.id = IDS;
-		this.name = name;
 		this.length = length;
+	}
+	
+	protected ShipBase(int length, String name) {
+		this(length);
+		this.name = name;
 	}
 	// endregion
 	
@@ -60,6 +64,10 @@ public abstract class ShipBase implements Ship {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	// region getters and setters
@@ -109,6 +117,10 @@ public abstract class ShipBase implements Ship {
 class Submarine extends ShipBase {
 	public static final int LENGTH = 2;
 
+	public Submarine() {
+		super(LENGTH);
+	}
+	
 	public Submarine(String name) {
 		super(LENGTH, name);
 	}
@@ -121,6 +133,10 @@ class Submarine extends ShipBase {
 class Destroyer extends ShipBase {
 	public static final int LENGTH = 3;
 
+	public Destroyer() {
+		super(LENGTH);
+	}
+	
 	public Destroyer(String name) {
 		super(LENGTH, name);
 	}

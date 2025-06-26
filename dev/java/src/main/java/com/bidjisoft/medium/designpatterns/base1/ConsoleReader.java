@@ -24,14 +24,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ConsoleReader {
 	private static Scanner scanner = new Scanner(System.in);
 
 	public static String[] readPosition(int length) {
-		BiFunction<String[], String, String[]> copy = (array, newValue) -> {
+		BiFunction<String[], String, String[]> merge = (array, newValue) -> {
 			Stream<String> s = Arrays.stream(array).filter(Objects::nonNull).flatMap(e -> Stream.of(e,newValue));
 			return s.toArray(String[]::new);
 		};
@@ -45,7 +44,7 @@ public class ConsoleReader {
 				continue;
 			} else if (i > 0 && !Cell.areJuxtaposed(res[i-1], pos)) {					
 				continue;
-			} else if (i > 0 && !Cell.areAligned(copy.apply(res, pos))) { 				
+			} else if (i > 0 && !Cell.areAligned(merge.apply(res, pos))) { 				
 				continue;
 			}
 			res[i] = pos;			
